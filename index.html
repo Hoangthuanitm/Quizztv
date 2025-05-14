@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quản lý bài luyện tập từ vựng</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prop-types/15.8.1/prop-types.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+  <div id="root" class="flex-grow"></div>
+  <footer class="bg-blue-600 text-white text-center p-4 mt-6">
+    <p>© 2025 Tài liệu kiểm tra | Thiết kế bởi Thuận</p>
+  </footer>
+  <script type="text/babel">
+    // Dữ liệu bài học từ file Excel
+    const lessons = [
+      { id: "1", link: "https://quizizz.com/admin/quiz/63f42608227632001e12f496?source=quiz_share" },
+      { id: "2", link: "https://quizizz.com/admin/quiz/63f42e2f227632001e15e71d?source=quiz_share" },
+      { id: "3", link: "https://quizizz.com/admin/quiz/63f6d53f54362b001eb8a853?source=quiz_share" },
+      { id: "4", link: "https://quizizz.com/admin/quiz/63f6da63239fef001d62d3c6?source=quiz_share" },
+      { id: "5", link: "https://quizizz.com/admin/quiz/63f6e6841c8f8b001d948759?source=quiz_share" },
+      { id: "6", link: "https://quizizz.com/admin/quiz/63f6e86da479d3001f263cf4?source=quiz_share" },
+      { id: "7", link: "https://quizizz.com/admin/quiz/63f6e9e097c2cc001d5f74ee?source=quiz_share" },
+      { id: "8", link: "https://quizizz.com/admin/quiz/63f705b0ac79ac001dfb2102?source=quiz_share" },
+      { id: "1-8", link: "https://quizizz.com/admin/quiz/homework/67c13fb16e54cb1bc89da3eb" },
+      { id: "9", link: "https://quizizz.com/admin/quiz/63f82ec913c17f001e5f8a1d?source=quiz_share" },
+      { id: "10", link: "https://quizizz.com/admin/quiz/63f82fbb9f0acf001e1a243c?source=quiz_share" },
+      { id: "11", link: "https://quizizz.com/admin/quiz/63f830b0f9806e001d436633?source=quiz_share" },
+      { id: "12", link: "https://quizizz.com/admin/quiz/63f8318a273fc9001e0a9f24?source=quiz_share" },
+      { id: "13", link: "https://quizizz.com/admin/quiz/63f832491e74a8001ec1e382?source=quiz_share" },
+      { id: "14", link: "https://quizizz.com/admin/quiz/67ce85fad837a1ca844feb88?searchLocale=" },
+      { id: "15", link: "https://quizizz.com/admin/quiz/67ce910d5233b4204d2b181e" },
+      { id: "16", link: "https://quizizz.com/admin/quiz/homework/67ce91670f0dbbcbcb2ffa7f" },
+      { id: "17", link: "https://quizizz.com/admin/quiz/67ce91b89873e11e214bfa7f" },
+      { id: "18", link: "https://quizizz.com/admin/quiz/67ce922875b5d94ef5301f38" },
+      { id: "19", link: "https://quizizz.com/admin/quiz/67ce928aeccf53a07e82103c" },
+      { id: "20", link: "https://quizizz.com/admin/quiz/67ce92e755fc6ea5445c49a1" },
+      { id: "21", link: "https://quizizz.com/admin/quiz/67ce9344c9f48eb25b24543c" },
+      { id: "22", link: "https://quizizz.com/admin/quiz/67ce938660243686d90a1dc9" },
+      { id: "23", link: "https://quizizz.com/admin/quiz/67ce93ddb1b966b1f4ee34ec" }
+    ];
+
+    // Component chính
+    function App() {
+      const [searchTerm, setSearchTerm] = React.useState("");
+
+      // Lọc bài học theo từ khóa tìm kiếm
+      const filteredLessons = lessons.filter(lesson =>
+        lesson.id.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+
+      return (
+        <div className="container mx-auto p-4">
+          {/* Header */}
+          <header className="bg-blue-600 text-white p-6 rounded-lg shadow-lg mb-6">
+            <h1 className="text-3xl font-bold">Quản lý bài luyện tập từ vựng</h1>
+            <p className="mt-2">Danh sách các bài học với liên kết Quizizz</p>
+          </header>
+
+          {/* Thanh tìm kiếm */}
+<div className="mb-6">
+            <input
+              type="text"
+              placeholder="Tìm kiếm bài học (VD: 1, 1-8, 10)"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          {/* Bảng danh sách bài học */}
+          <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+            <table className="w-full">
+              <thead className="bg-gray-200">
+                <tr>
+                  <th className="p-3 text-left">Bài học</th>
+                  <th className="p-3 text-left">Liên kết Quizizz</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredLessons.length > 0 ? (
+                  filteredLessons.map(lesson => (
+                    <tr key={lesson.id} className="border-b hover:bg-gray-50">
+                      <td className="p-3">Bài {lesson.id}</td>
+                      <td className="p-3">
+                        <a
+                          href={lesson.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-500 hover:underline"
+                        >
+                          Mở Quizizz
+                        </a>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="2" className="p-3 text-center text-gray-500">
+                      Không tìm thấy bài học nào
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      );
+    }
+
+    // Render ứng dụng
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>
